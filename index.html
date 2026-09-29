@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>கேஸ் புக் & இரசீது உருவாக்கும் கருவி</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .form-section {
+            flex: 1;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 450px;
+        }
+        .preview-section {
+            flex: 1.5;
+            background: #525659;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            margin-top: 0;
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+            font-size: 18px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #218838;
+        }
+
+        /* Printable Sheet Styling */
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            color: #000;
+            position: relative;
+        }
+
+        /* ---------------- GAS BOOK STYLING ---------------- */
+        .gas-book-card {
+            border: 2px solid #000;
+            padding: 15px;
+            position: relative;
+            background: #fff;
+            min-height: 120mm;
+            overflow: hidden;
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.08;
+            width: 70%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .book-content {
+            position: relative;
+            z-index: 1;
+        }
+        .book-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .book-header img {
+            max-height: 55px;
+            margin-right: 15px;
+        }
+        .book-header-title h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #111;
+        }
+        .book-header-title div {
+            font-size: 11px;
+            color: #333;
+        }
+        .book-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .book-details {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 12px;
+        }
+        .book-field {
+            border-bottom: 1px dotted #888;
+            padding-bottom: 2px;
+        }
+        .book-field span.label {
+            font-weight: bold;
+            display: block;
+            font-size: 10px;
+            color: #555;
+        }
+        .photo-box {
+            width: 35mm;
+            height: 45mm;
+            border: 2px dashed #444;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            background: #fafafa;
+        }
+
+        /* ---------------- 4-IN-1 GAS BILL STYLING ---------------- */
+        .bill-grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10mm;
+            height: 270mm;
+        }
+        .bill-card {
+            border: 1px dashed #000;
+            padding: 10px;
+            position: relative;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            font-size: 11px;
+        }
+        .bill-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+        .bill-header img {
+            max-height: 35px;
+            margin-right: 10px;
+        }
+        .bill-header-text h4 {
+            margin: 0;
+            font-size: 13px;
+        }
+        .bill-header-text div {
+            font-size: 9px;
+        }
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+        .bill-table td {
+            padding: 2px 0;
+            vertical-align: top;
+            font-size: 10px;
+        }
+        .amount-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+        .amount-table th, .amount-table td {
+            padding: 3px;
+            text-align: left;
+            font-size: 10px;
+        }
+        .amount-table td.right, .amount-table th.right {
+            text-align: right;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .form-section {
+                display: none;
+            }
+            .preview-section {
+                background: white;
+                padding: 0;
+            }
+            .page {
+                box-shadow: none;
+                padding: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Form Inputs -->
+    <div class="form-section">
+        <h2>கேஸ் விவரங்களை உள்ளிடுக</h2>
+        
+        <div class="form-group">
+            <label>பார்வை முறை (View Mode):</label>
+            <select id="viewMode" onchange="switchView()">
+                <option value="book">கேஸ் புக் கார்டு (Gas Passbook)</option>
+                <option value="bill">4-in-1 கேஸ் பில் (A4 Quarter Size)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>நிறுவனம் (Gas Company):</label>
+            <select id="companySelect" onchange="updateView()">
+                <option value="BHARAT">BHARATGAS (பாரத் கேஸ்)</option>
+                <option value="INDANE">INDANE GAS (இண்டேன்)</option>
+                <option value="HP">HP GAS (எச்பி கேஸ்)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>முகவர் பெயர் (Agency Name):</label>
+            <input type="text" id="agencyName" value="ANNAI GAS SERVICE" oninput="updateView()">
+        </div>
+
+        <div class="form-group">
+            <label>முகவரி & போன்:</label>
+            <input type="text" id="agencyAddr" value="262, South Cotton Road, TUTICORIN-628001. Ph: 2329959" oninput="updateView()">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>வாடிக்கையாளர் பெயர்:</label>
+                <input type="text" id="custName" value="MRS LATHA B" oninput="updateView()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>நுகர்வோர் எண் (Consumer No):</label>
+                <input type="text" id="consNo" value="70095970" oninput="updateView()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>வாடிக்கையாளர் முகவரி:</label>
+            <input type="text" id="custAddress" value="386/13 GEETHAJEEVAN NAGAR, GEORGE ROAD, TUTICORIN" oninput="updateView()">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>போன் எண்:</label>
+                <input type="text" id="custPhone" value="8055398046" oninput="updateView()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>S.V. No / Date:</label>
+                <input type="text" id="svNo" value="700003986696 / 24-04-2024" oninput="updateView()">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>தேதி (Bill Date):</label>
+                <input type="text" id="billDate" value="13/12/2024" oninput="updateView()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>இன்வாய்ஸ் எண் (Inv No):</label>
+                <input type="text" id="invNo" value="118435" oninput="updateView()">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>அடிப்படை விலை (Rs.):</label>
+                <input type="number" id="baseRate" value="825.72" oninput="calculateTotal()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>மொத்த தொகை (Net Total):</label>
+                <input type="number" id="netAmount" value="867.00" oninput="updateView()">
+            </div>
+        </div>
+
+        <button class="btn" onclick="window.print()">அச்சிடுக / PDF ஆக சேமி (Print / PDF)</button>
+    </div>
+
+    <!-- Preview Printable Sheet -->
+    <div class="preview-section">
+        <div class="page" id="printArea">
+            
+            <!-- VIEW 1: GAS PASSBOOK -->
+            <div id="bookView" class="gas-book-card">
+                <img id="bookWatermark" class="watermark" src="" alt="watermark">
+                <div class="book-content">
+                    <div class="book-header">
+                        <img id="bookLogo" src="" alt="Company Logo">
+                        <div class="book-header-title">
+                            <h3 id="pBookCompanyTitle">BHARATGAS CONSUMER PASSBOOK</h3>
+                            <div id="pBookAgencyName" style="font-weight: bold; margin-top:2px;">ANNAI GAS SERVICE</div>
+                            <div id="pBookAgencyAddr">262, South Cotton Road, TUTICORIN-628001</div>
+                        </div>
+                    </div>
+
+                    <div class="book-main">
+                        <div class="book-details">
+                            <div class="book-field"><span class="label">CONSUMER NO (நுகர்வோர் எண்):</span><span id="pBookConsNo">70095970</span></div>
+                            <div class="book-field"><span class="label">S.V. NO & DATE:</span><span id="pBookSvNo">700003986696 / 24-04-2024</span></div>
+                            <div class="book-field"><span class="label">NAME (பெயர்):</span><span id="pBookName">MRS LATHA B</span></div>
+                            <div class="book-field"><span class="label">PHONE (தொலைபேசி):</span><span id="pBookPhone">8055398046</span></div>
+                            <div class="book-field" style="grid-column: span 2;"><span class="label">ADDRESS (முகவரி):</span><span id="pBookAddr">386/13 GEETHAJEEVAN NAGAR, GEORGE ROAD, TUTICORIN</span></div>
+                            <div class="book-field"><span class="label">NO. OF CYLINDERS:</span><span>1</span></div>
+                            <div class="book-field"><span class="label">DEPOSIT AMOUNT:</span><span>Rs. 2200/-</span></div>
+                        </div>
+
+                        <!-- PHOTO BOX -->
+                        <div class="photo-box">
+                            <span>PASSPORT<br>SIZE<br>PHOTO</span>
+                            <span style="font-size: 8px; margin-top: 5px;">(புகைப்படம்)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: 4-IN-1 GAS BILL -->
+            <div id="billView" class="bill-grid-container" style="display: none;">
+                <!-- 4 Repeated Bills -->
+                <script>
+                    for(let i=1; i<=4; i++) {
+                        document.write(`
+                            <div class="bill-card">
+                                <img class="watermark billWatermark" src="" alt="watermark">
+                                <div class="bill-header">
+                                    <img class="billLogo" src="" alt="Logo">
+                                    <div class="bill-header-text">
+                                        <h4 class="pBillCompanyTitle">BHARATGAS</h4>
+                                        <div class="pBillAgencyName" style="font-weight: bold;">ANNAI GAS SERVICE</div>
+                                        <div class="pBillAgencyAddr">TUTICORIN-628001</div>
+                                    </div>
+                                </div>
+
+                                <table class="bill-table">
+                                    <tr>
+                                        <td><strong>Inv No:</strong> <span class="pBillInv">118435</span></td>
+                                        <td style="text-align:right;"><strong>Date:</strong> <span class="pBillDate">13/12/2024</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Cons No:</strong> <span class="pBillConsNo">70095970</span></td>
+                                        <td style="text-align:right;"><strong>Ph:</strong> <span class="pBillPhone">8055398046</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><strong>Name:</strong> <span class="pBillName">MRS LATHA B</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><strong>Addr:</strong> <span class="pBillAddr">TUTICORIN</span></td>
+                                    </tr>
+                                </table>
+
+                                <table class="amount-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th class="right">Amt (Rs.)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>14.2KG REFILL DOMESTIC</td>
+                                            <td class="right pBaseRate">825.72</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CGST (2.5%)</td>
+                                            <td class="right pCgst">20.64</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SGST (2.5%)</td>
+                                            <td class="right pSgst">20.64</td>
+                                        </tr>
+                                        <tr style="font-weight: bold; border-top: 1px solid #000;">
+                                            <td>NET TOTAL</td>
+                                            <td class="right pNetTotal">Rs. 867.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="font-size: 8px; text-align: center; margin-top: 4px;">
+                                    பில்லில் உள்ள தொகையை மட்டும் செலுத்தவும்.
+                                </div>
+                            </div>
+                        `);
+                    }
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // LOGO DATA URLS
+    const logos = {
+        BHARAT: "https://upload.wikimedia.org/wikipedia/commons/f/f8/Bharat_Petroleum_Logo.svg",
+        INDANE: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Indian_Oil_Logo.svg",
+        HP: "https://upload.wikimedia.org/wikipedia/commons/2/23/HP_Logo.svg"
+    };
+
+    function switchView() {
+        let mode = document.getElementById('viewMode').value;
+        if(mode === 'book') {
+            document.getElementById('bookView').style.display = 'block';
+            document.getElementById('billView').style.display = 'none';
+        } else {
+            document.getElementById('bookView').style.display = 'none';
+            document.getElementById('billView').style.display = 'grid';
+        }
+    }
+
+    function calculateTotal() {
+        let base = parseFloat(document.getElementById('baseRate').value) || 0;
+        let cgst = base * 0.025;
+        let sgst = base * 0.025;
+        let total = Math.round(base + cgst + sgst);
+        
+        document.getElementById('netAmount').value = total.toFixed(2);
+        updateView();
+    }
+
+    function updateView() {
+        let company = document.getElementById('companySelect').value;
+        let agency = document.getElementById('agencyName').value;
+        let agencyAddr = document.getElementById('agencyAddr').value;
+        let name = document.getElementById('custName').value;
+        let consNo = document.getElementById('consNo').value;
+        let addr = document.getElementById('custAddress').value;
+        let phone = document.getElementById('custPhone').value;
+        let bDate = document.getElementById('billDate').value;
+        let inv = document.getElementById('invNo').value;
+        let sv = document.getElementById('svNo').value;
+        let base = parseFloat(document.getElementById('baseRate').value) || 0;
+        let net = parseFloat(document.getElementById('netAmount').value) || 0;
+
+        let cgst = (base * 0.025).toFixed(2);
+        let sgst = (base * 0.025).toFixed(2);
+        let logoSrc = logos[company];
+
+        // Update Passbook
+        document.getElementById('bookLogo').src = logoSrc;
+        document.getElementById('bookWatermark').src = logoSrc;
+        document.getElementById('pBookCompanyTitle').innerText = company + "GAS CONSUMER PASSBOOK";
+        document.getElementById('pBookAgencyName').innerText = agency;
+        document.getElementById('pBookAgencyAddr').innerText = agencyAddr;
+        document.getElementById('pBookConsNo').innerText = consNo;
+        document.getElementById('pBookSvNo').innerText = sv;
+        document.getElementById('pBookName').innerText = name;
+        document.getElementById('pBookPhone').innerText = phone;
+        document.getElementById('pBookAddr').innerText = addr;
+
+        // Update 4 Bills
+        let bLogos = document.querySelectorAll('.billLogo');
+        let bWatermarks = document.querySelectorAll('.billWatermark');
+        let bTitles = document.querySelectorAll('.pBillCompanyTitle');
+        let bAgencies = document.querySelectorAll('.pBillAgencyName');
+        let bAddrs = document.querySelectorAll('.pBillAgencyAddr');
+        let bInvs = document.querySelectorAll('.pBillInv');
+        let bDates = document.querySelectorAll('.pBillDate');
+        let bConsNos = document.querySelectorAll('.pBillConsNo');
+        let bPhones = document.querySelectorAll('.pBillPhone');
+        let bNames = document.querySelectorAll('.pBillName');
+        let bCAddrs = document.querySelectorAll('.pBillAddr');
+        let bBases = document.querySelectorAll('.pBaseRate');
+        let bCgsts = document.querySelectorAll('.pCgst');
+        let bSgsts = document.querySelectorAll('.pSgst');
+        let bNets = document.querySelectorAll('.pNetTotal');
+
+        for(let i=0; i<4; i++) {
+            if(bLogos[i]) bLogos[i].src = logoSrc;
+            if(bWatermarks[i]) bWatermarks[i].src = logoSrc;
+            if(bTitles[i]) bTitles[i].innerText = company + "GAS";
+            if(bAgencies[i]) bAgencies[i].innerText = agency;
+            if(bAddrs[i]) bAddrs[i].innerText = agencyAddr;
+            if(bInvs[i]) bInvs[i].innerText = inv;
+            if(bDates[i]) bDates[i].innerText = bDate;
+            if(bConsNos[i]) bConsNos[i].innerText = consNo;
+            if(bPhones[i]) bPhones[i].innerText = phone;
+            if(bNames[i]) bNames[i].innerText = name;
+            if(bCAddrs[i]) bCAddrs[i].innerText = addr;
+            if(bBases[i]) bBases[i].innerText = base.toFixed(2);
+            if(bCgsts[i]) bCgsts[i].innerText = cgst;
+            if(bSgsts[i]) bSgsts[i].innerText = sgst;
+            if(bNets[i]) bNets[i].innerText = "Rs. " + net.toFixed(2);
+        }
+    }
+
+    // Initial Load
+    updateView();
+</script>
+
+</body>
+</html>
